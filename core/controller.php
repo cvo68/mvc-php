@@ -38,11 +38,26 @@ class Controller{
     }
 
     private function controllerNotHome(){
+        $controller = $this->getControllerNotHome();
 
+        if ($this->controllerExist($controller)){
+            throw new ControllerNotExistException("Esse controller não existe.");
+        }
+
+        return $this->InstanciateController();
     }
 
     private function isHome(){
         return ($this->uri =='/');
+    }
+
+    private function getControllerNotHome(){
+        if(substr_count($this->uri, '/') > 1){
+            list($controller) = explode('/', $this->uri);
+            return ucfirst($controller). 'Controller';
+        }
+
+        return ucfirst(ltrim($this->uri, '/')).'Controller';
     }
 
     private function controllerExist($controller){
